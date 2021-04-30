@@ -53,9 +53,9 @@ void RBT<T>::get_inorder_util(Node<T>* node, vector<T>* res)
 {
 	if(node)
 	{
-		inorderUtil(node->left);
-		res->push_back(node);
-		inorderUtil(node->right);
+		get_inorder_util(node->left);
+		res->push_back(node->data);
+		get_inorder_util(node->right);
 	}
 }
 
@@ -65,8 +65,51 @@ vector<T> RBT<T>::get_inorder()
 	vector<T> res;
 	if(root)
 	{
-		inorderUtil(root, res);
+		get_inorder_util(root, res);
 	}
 	return res;
 }
 
+template<typename T>
+void RBT<T>::get_preorder_util(Node<T>* node, vector<T>* res)
+{
+	if(node)
+	{
+		res->push_back(node->data);
+		get_preorder_util(node->left);
+		get_preorder_util(node->right);
+	}
+}
+
+template<typename T>
+vector<T> RBT<T>::get_preorder()
+{
+	vector<T> res;
+	if(root)
+	{
+		get_preorder_util(root, res);
+	}
+	return res;
+}
+
+template<typename T>
+void RBT<T>::get_preorder_util(Node<T>* node, vector<T>* res)
+{
+	if(node)
+	{
+		get_postorder_util(node->left);
+		get_postorder_util(node->right);
+		res->push_back(node->data);
+	}
+}
+
+template<typename T>
+vector<T> RBT<T>::get_postorder()
+{
+	vector<T> res;
+	if(root)
+	{
+		get_postorder_util(root, res);
+	}
+	return res;
+}

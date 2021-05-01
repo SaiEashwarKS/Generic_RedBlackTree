@@ -37,10 +37,11 @@ class RBT
     void bst_insert_util(Node<T>* temp, Node<T>* node);
 
 	public:
-    RBT(); //default
+    explicit RBT(); //default
     RBT(const RBT<T>&); //copy
     template<typename InputIterator>
-    RBT(InputIterator first, InputIterator last); //range
+    explicit RBT(InputIterator first, InputIterator last); //range
+    RBT<T>& operator=(const RBT<T>&);
     void insert(T data);
 	vector<T> get_inorder() const;
     vector<T> get_preorder() const;
@@ -62,7 +63,7 @@ RBT<T>::RBT() : root_(nullptr)
 template<typename T>
 RBT<T>::RBT(const RBT<T>& rhs) : root_(nullptr)
 {
-    vector<T> preorder_vector = rhs.get_preorder();
+    vector<T> preorder_vector = rhs.get_preorder(); //preorder gives the exact layout of the tree
     for(auto node : preorder_vector)
         this->insert(node);
 }
@@ -77,6 +78,20 @@ RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
         insert(*it);
         ++it;
     }
+}
+
+template<typename T>
+RBT<T>& RBT<T>::operator=(const RBT<T>& rhs)
+{
+    if(this != &rhs)
+    {
+        delete this;
+        this->root_ = nullptr;
+        vector<T> preorder_vector = rhs.get_preorder();
+        for(auto node : preorder_vector)
+            this -> insert(node);
+    }
+    return *this;
 }
 
 template<typename T>

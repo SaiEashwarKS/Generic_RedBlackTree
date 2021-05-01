@@ -43,10 +43,23 @@ int main()
     cout << "\n";
     #endif
     
-    #if 1
+    #if 0
     vector<int>v{10, 30, 20, 50, 40};
     RBT<int> tree(v.begin(), v.end());
     RBT<int> tree2(tree);
+    vector<int> v2 = tree2.get_preorder();
+    for(auto e: v2)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n";
+    #endif
+
+    #if 1
+    vector<int>v{10, 30, 20, 50, 40};
+    RBT<int> tree(v.begin(), v.end());
+    RBT<int> tree2 = tree;
+    tree2 = tree;
     vector<int> v2 = tree2.get_preorder();
     for(auto e: v2)
     {

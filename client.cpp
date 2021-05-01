@@ -58,10 +58,11 @@ int main()
     #if 1
     vector<int>v{10, 30, 20, 50, 40};
     RBT<int> tree(v.begin(), v.end());
-    RBT<int> tree2 = tree;
+    vector<int>v2{100, 300, 200, 500, 400};
+    RBT<int> tree2(v2.begin(), v2.end());
     tree2 = tree;
-    vector<int> v2 = tree2.get_preorder();
-    for(auto e: v2)
+    vector<int> v3 = tree2.get_preorder();
+    for(auto e: v3)
     {
         cout << e << "\t";
     }

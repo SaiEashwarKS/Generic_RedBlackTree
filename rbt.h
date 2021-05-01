@@ -68,6 +68,7 @@ RBT<T>::~RBT()
 	{
 		delete_node(root_);
 	}
+	root_ = nullptr;
 }
 
 template<typename T>

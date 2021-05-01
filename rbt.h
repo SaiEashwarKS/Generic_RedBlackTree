@@ -54,6 +54,8 @@ class RBT
 	bool search(T data) const;
     template<typename T2>
     friend RBT<T2>& operator+(const RBT<T2>& t1, const RBT<T2>& t2);
+    T max();
+    T min();
 };
 
 
@@ -381,4 +383,27 @@ vector<T> RBT<T>::get_postorder() const
 	return res;
 }
 
+template<typename T>
+T RBT<T>::max()
+{
+    Node<T>* temp;
+    temp = root_;
+    while(temp->right_)
+    {
+        temp = temp->right_;
+    }
+    return temp->data_;
+}
+
+template<typename T>
+T RBT<T>::min()
+{
+    Node<T>* temp;
+    temp = root_;
+    while(temp->left_)
+    {
+        temp = temp->left_;
+    }
+    return temp->data_;
+}
 #endif

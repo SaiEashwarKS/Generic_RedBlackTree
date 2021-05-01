@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<string>
 
 #include"rbt.h"
 using namespace std;
@@ -132,6 +133,19 @@ int main()
     }
 
     cout << "\n";
+    #endif
+
+    #if 1
+    vector<string> v{"cde", "abc", "xyz", "abc"};
+    RBT<string> tree(v.begin(), v.end());
+    vector<string> v2 = tree.get_preorder();
+    for(auto e: v2)
+    {
+        cout << e << "\t";
+    }
+
+    cout << "\n";
+    cout << tree.min() << "\t" << tree.max() << endl;
     #endif
 
 	return 0;

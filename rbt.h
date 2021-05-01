@@ -33,7 +33,7 @@ class RBT
 	void get_preorder_util(Node<T>*, vector<T>*) const;
 	void get_postorder_util(Node<T>*, vector<T>*) const;
 	Node<T>* create_node(T data);
-	void bst_insert(T data);
+	Node<T>* bst_insert(T data);
 	void bst_insert_util(Node<T>* temp, Node<T>* node);
 
 	public:
@@ -48,12 +48,13 @@ class RBT
 	vector<T> get_inorder() const;
 	vector<T> get_preorder() const;
 	vector<T> get_postorder() const;
+    bool search(T data) const;
 };
 
 
 //-----------Node methods
 template<typename T>
-Node<T>::Node(T data) : data_(data), colour_(black), left_(nullptr), right_(nullptr), parent_(nullptr)
+Node<T>::Node(T data) : data_(data), colour_(red), left_(nullptr), right_(nullptr), parent_(nullptr)
 {}
 
 
@@ -129,33 +130,68 @@ void RBT<T>::bst_insert_util(Node<T>* temp, Node<T>* node)
 		if(temp->right_)
 			bst_insert_util(temp->right_, node);
 		else
+        {
 			temp->right_ = node;
+            node->parent_ = temp;
+        }
 	}
 	else if(node->data_ < temp->data_)
 	{
 		if(temp->left_)
 			bst_insert_util(temp->left_, node);
 		else
+        {
 			temp->left_ = node;
+            node->parent_ = temp;
+        }
 	}
 }
 
 template<typename T>
-void RBT<T>::bst_insert(T data)
+Node<T>* RBT<T>::bst_insert(T data)
 {
-	Node<T>* node = create_node(data);
+	Node<T>* node_ptr = create_node(data);
 	if(root_ == nullptr)
-		root_ = node;
+    {
+        root_ = node_ptr;
+    }
 	else
 	{
-		bst_insert_util(root_, node);
+		bst_insert_util(root_, node_ptr);
 	}
+    return node_ptr;
+}
+
+template<typename T>
+bool RBT<T>::search(T data) const
+{
+    Node<T>* node = root_;
+    while(node)
+    {
+        if(node->data_ == data)
+            return true;
+        node = data < node->data_ ? node->left_ : node->right_;
+    }
+    return false;
 }
 
 template<typename T>
 void RBT<T>::insert(T data)
 {
-	bst_insert(data);
+    bool node_exists = search(data);
+    if(node_exists)
+        return;
+	Node<T>* node_ptr = bst_insert(data);
+    if(root_ == node_ptr)
+    {
+        node_ptr -> colour_ = black;
+    }
+    else
+    {
+        Node<T>* parent_ptr = node_ptr->parent_;
+        Node<T>* 
+    }
+
 }
 
 template<typename T>

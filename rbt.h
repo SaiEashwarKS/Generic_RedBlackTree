@@ -29,21 +29,22 @@ class RBT
 {	
 	private:
 	Node<T> *root_;
-	void get_inorder_util(Node<T>*, vector<T>*);
-    void get_preorder_util(Node<T>*, vector<T>*);
-    void get_postorder_util(Node<T>*, vector<T>*);
+	void get_inorder_util(Node<T>*, vector<T>*) const;
+    void get_preorder_util(Node<T>*, vector<T>*) const;
+    void get_postorder_util(Node<T>*, vector<T>*) const;
 	Node<T>* create_node(T data);
 	void bst_insert(T data);
     void bst_insert_util(Node<T>* temp, Node<T>* node);
 
 	public:
-	RBT();
+    RBT(); //default
+    RBT(const RBT<T>&); //copy
     template<typename InputIterator>
-    RBT(InputIterator first, InputIterator last);
+    RBT(InputIterator first, InputIterator last); //range
     void insert(T data);
-	vector<T> get_inorder();
-    vector<T> get_preorder();
-    vector<T> get_postorder();
+	vector<T> get_inorder() const;
+    vector<T> get_preorder() const;
+    vector<T> get_postorder() const;
 };
 
 
@@ -55,16 +56,21 @@ Node<T>::Node(T data) : data_(data), colour_(black), left_(nullptr), right_(null
 
 //-----------RBT methods
 template<typename T>
-RBT<T>::RBT()
+RBT<T>::RBT() : root_(nullptr)
+{}
+
+template<typename T>
+RBT<T>::RBT(const RBT<T>& rhs) : root_(nullptr)
 {
-	this->root_ = nullptr;
+    vector<T> preorder_vector = rhs.get_preorder();
+    for(auto node : preorder_vector)
+        this->insert(node);
 }
 
 template<typename T>
 template<typename InputIterator>
-RBT<T>::RBT(InputIterator first, InputIterator last)
+RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
 {
-    root_ = nullptr;
     InputIterator it(first);
     while(it != last)
     {
@@ -83,15 +89,14 @@ Node<T>* RBT<T>::create_node(T data)
 template<typename T>
 void RBT<T>::bst_insert_util(Node<T>* temp, Node<T>* node)
 {
-	int dataIsGreater = node->data_ > temp->data_;
-	if(dataIsGreater)
+	if(node->data_ > temp->data_)
 	{
 		if(temp->right_)
 			bst_insert_util(temp->right_, node);
 		else
 			temp->right_ = node;
 	}
-	else
+	else if(node->data_ < temp->data_)
 	{
 		if(temp->left_)
 			bst_insert_util(temp->left_, node);
@@ -119,7 +124,7 @@ void RBT<T>::insert(T data)
 }
 
 template<typename T>
-void RBT<T>::get_inorder_util(Node<T>* node, vector<T>* res)
+void RBT<T>::get_inorder_util(Node<T>* node, vector<T>* res) const
 {
 	if(node)
 	{
@@ -130,7 +135,7 @@ void RBT<T>::get_inorder_util(Node<T>* node, vector<T>* res)
 }
 
 template<typename T>
-vector<T> RBT<T>::get_inorder()
+vector<T> RBT<T>::get_inorder() const
 {
 	vector<T> res;
 	if(root_)
@@ -141,7 +146,7 @@ vector<T> RBT<T>::get_inorder()
 }
 
 template<typename T>
-void RBT<T>::get_preorder_util(Node<T>* node, vector<T>* res)
+void RBT<T>::get_preorder_util(Node<T>* node, vector<T>* res) const
 {
 	if(node)
 	{
@@ -152,7 +157,7 @@ void RBT<T>::get_preorder_util(Node<T>* node, vector<T>* res)
 }
 
 template<typename T>
-vector<T> RBT<T>::get_preorder()
+vector<T> RBT<T>::get_preorder() const
 {
 	vector<T> res;
 	if(root_)
@@ -163,7 +168,7 @@ vector<T> RBT<T>::get_preorder()
 }
 
 template<typename T>
-void RBT<T>::get_postorder_util(Node<T>* node, vector<T>* res)
+void RBT<T>::get_postorder_util(Node<T>* node, vector<T>* res) const
 {
 	if(node)
 	{
@@ -174,7 +179,7 @@ void RBT<T>::get_postorder_util(Node<T>* node, vector<T>* res)
 }
 
 template<typename T>
-vector<T> RBT<T>::get_postorder()
+vector<T> RBT<T>::get_postorder() const
 {
 	vector<T> res;
 	if(root_)

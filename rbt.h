@@ -235,7 +235,7 @@ void RBT<T>::rebalance(Node<T> *root, Node<T> *node_ptr)
 {
 	if(root == node_ptr)
 	{
-		node_ptr->colour_ == black;
+		node_ptr->colour_ = black;
 	}
 	else
 	{
@@ -252,7 +252,7 @@ void RBT<T>::rebalance(Node<T> *root, Node<T> *node_ptr)
 		{
 			uncle_ptr = grandparent_ptr->left_;
 		}
-		if(uncle_ptr->colour_ == red)
+		if(uncle_ptr && uncle_ptr->colour_ == red)
 		{
 			parent_ptr->colour_ = black;
 			uncle_ptr->colour_ = black;
@@ -295,9 +295,11 @@ template<typename T>
 void RBT<T>::insert(T data)
 {
 	bool node_exists = search(data);
+    //cout << "search result : " << node_exists << "\n";
 	if(node_exists)
 		return;
 	Node<T>* node_ptr = bst_insert(data);
+    //cout << "bst insert done, node_ptr : " << node_ptr << "\n";
 	rebalance(root_, node_ptr);
 }
 

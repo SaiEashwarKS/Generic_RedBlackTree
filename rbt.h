@@ -52,6 +52,10 @@ class RBT
 	vector<T> get_preorder() const;
 	vector<T> get_postorder() const;
 	bool search(T data) const;
+    template<typename T2>
+    friend RBT<T2>& operator+(const RBT<T2>& t1, const RBT<T2>& t2);
+    T max();
+    T min();
 };
 
 
@@ -119,6 +123,16 @@ RBT<T>& RBT<T>::operator=(const RBT<T>& rhs)
 }
 
 template<typename T>
+RBT<T>& operator+(const RBT<T>& t1, const RBT<T>& t2)
+{
+    RBT<T>* res_tree = new RBT<T>(t1);
+    vector<T> preorder_vector = t2.get_preorder();
+	for(auto node : preorder_vector)
+		res_tree->insert(node);
+    return *res_tree;
+}
+
+template<typename T>
 Node<T>* RBT<T>::create_node(T data)
 {
 	Node<T>* node = new Node<T>(data);
@@ -183,9 +197,9 @@ void RBT<T>::rotate_right(Node<T> *node)
 {
 	Node<T> *left_node = node->left_;
 	node->left_ = left_node->right_;
-	if(left_node)
+	if(node->left_)
 	{
-		left_node->parent_ = node;
+		node->left_->parent_ = node;
 	}
 	left_node->parent_ = node->parent_;
 	if(!node->parent_)
@@ -209,9 +223,9 @@ void RBT<T>::rotate_left(Node<T> *node)
 {
 	Node<T> *right_node = node->right_;
 	node->right_ = right_node->left_;
-	if(right_node)
+	if(node->right_)
 	{
-		right_node->parent_ = node;
+		node->right_->parent_ = node;
 	}
 	right_node->parent_ = node->parent_;
 	if(!node->parent_)
@@ -224,7 +238,7 @@ void RBT<T>::rotate_left(Node<T> *node)
 	}
 	else
 	{
-		node->parent_->right_ = right_node;
+		node->parent_->left_ = right_node;
 	}
 	right_node->left_ = node;
 	node->parent_ = right_node;
@@ -369,4 +383,27 @@ vector<T> RBT<T>::get_postorder() const
 	return res;
 }
 
+template<typename T>
+T RBT<T>::max()
+{
+    Node<T>* temp;
+    temp = root_;
+    while(temp->right_)
+    {
+        temp = temp->right_;
+    }
+    return temp->data_;
+}
+
+template<typename T>
+T RBT<T>::min()
+{
+    Node<T>* temp;
+    temp = root_;
+    while(temp->left_)
+    {
+        temp = temp->left_;
+    }
+    return temp->data_;
+}
 #endif

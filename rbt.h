@@ -19,7 +19,7 @@ class Node
 	Node<T> *right_; 
 	Node<T> *parent_;
 
-    Node(T data);
+	Node(T data);
 	
 	friend class RBT<T>;
 };
@@ -30,21 +30,23 @@ class RBT
 	private:
 	Node<T> *root_;
 	void get_inorder_util(Node<T>*, vector<T>*) const;
-    void get_preorder_util(Node<T>*, vector<T>*) const;
-    void get_postorder_util(Node<T>*, vector<T>*) const;
+	void get_preorder_util(Node<T>*, vector<T>*) const;
+	void get_postorder_util(Node<T>*, vector<T>*) const;
 	Node<T>* create_node(T data);
 	void bst_insert(T data);
-    void bst_insert_util(Node<T>* temp, Node<T>* node);
+	void bst_insert_util(Node<T>* temp, Node<T>* node);
 
 	public:
-    RBT(); //default
-    RBT(const RBT<T>&); //copy
-    template<typename InputIterator>
-    RBT(InputIterator first, InputIterator last); //range
-    void insert(T data);
+	RBT(); //ctor
+	~RBT(); //dtor
+	void delete_node(Node<T>* node);
+	RBT(const RBT<T>&); //copy
+	template<typename InputIterator>
+	RBT(InputIterator first, InputIterator last); //range
+	void insert(T data);
 	vector<T> get_inorder() const;
-    vector<T> get_preorder() const;
-    vector<T> get_postorder() const;
+	vector<T> get_preorder() const;
+	vector<T> get_postorder() const;
 };
 
 
@@ -60,23 +62,43 @@ RBT<T>::RBT() : root_(nullptr)
 {}
 
 template<typename T>
+RBT<T>::~RBT()
+{
+	if(root_)
+	{
+		delete_node(root_);
+	}
+}
+
+template<typename T>
+void RBT<T>::delete_node(Node<T> *node)
+{
+	if(node)
+	{
+		delete_node(node->left_);
+		delete_node(node->right_);
+		delete node;
+	}
+}
+
+template<typename T>
 RBT<T>::RBT(const RBT<T>& rhs) : root_(nullptr)
 {
-    vector<T> preorder_vector = rhs.get_preorder();
-    for(auto node : preorder_vector)
-        this->insert(node);
+	vector<T> preorder_vector = rhs.get_preorder();
+	for(auto node : preorder_vector)
+		this->insert(node);
 }
 
 template<typename T>
 template<typename InputIterator>
 RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
 {
-    InputIterator it(first);
-    while(it != last)
-    {
-        insert(*it);
-        ++it;
-    }
+	InputIterator it(first);
+	while(it != last)
+	{
+		insert(*it);
+		++it;
+	}
 }
 
 template<typename T>
@@ -120,7 +142,7 @@ void RBT<T>::bst_insert(T data)
 template<typename T>
 void RBT<T>::insert(T data)
 {
-    bst_insert(data);
+	bst_insert(data);
 }
 
 template<typename T>

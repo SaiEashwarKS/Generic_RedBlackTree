@@ -82,15 +82,17 @@ int main()
         cout << "\n";
     }
     cout << "\n";
-    #endif
-
+    #endif    
     
-    
-    
-    #if 1
+    #if 0
     RBT<int> tree;
+    tree.insert(3);
+    tree.insert(21);
+    tree.insert(32);
+    tree.insert(15);
+    tree.insert(1);
     tree.insert(50);
-    tree.insert(40);
+    tree.insert(30);
     //tree.insert(30);
     vector<int> v = tree.get_preorder();
     for(auto e: v)
@@ -99,9 +101,19 @@ int main()
         cout << e << "\t";
     }
     cout << "\n";
-    
-    
     #endif
+
+    #if 1
+    vector<int> v{10, 20, 60, 30, 11, 20, 40, 5, 100, 20, 35, 32, 15, 69, 69420};
+    RBT<int> tree(v.begin(), v.end());
+    vector<int> v2 = tree.get_preorder();
+    for(auto e: v2)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n";
+    #endif
+
 
 	return 0;
 }

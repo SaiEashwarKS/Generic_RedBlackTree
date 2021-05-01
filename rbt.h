@@ -43,6 +43,7 @@ class RBT
 	RBT(const RBT<T>&); //copy
 	template<typename InputIterator>
 	RBT(InputIterator first, InputIterator last); //range
+    RBT<T>& operator=(const RBT<T>&); //copy assn
 	void insert(T data);
 	vector<T> get_inorder() const;
 	vector<T> get_preorder() const;
@@ -100,6 +101,17 @@ RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
 		insert(*it);
 		++it;
 	}
+}
+
+template<typename T>
+RBT<T>& RBT<T>::operator=(const RBT<T>& rhs)
+{
+    if(this != &rhs)
+    {
+        RBT<T> temp(rhs);
+        swap(temp.root_, root_);
+    } //dtor called on temp
+    return *this;
 }
 
 template<typename T>

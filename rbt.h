@@ -35,6 +35,9 @@ class RBT
 	Node<T>* create_node(T data);
 	Node<T>* bst_insert(T data);
 	void bst_insert_util(Node<T>* temp, Node<T>* node);
+	void rebalance(Node<T> *root, Node<T> *node_ptr);
+	void rotate_left(Node<T> *node);
+	void rotate_right(Node<T> *node);
 
 	public:
 	RBT(); //ctor
@@ -43,12 +46,12 @@ class RBT
 	RBT(const RBT<T>&); //copy
 	template<typename InputIterator>
 	RBT(InputIterator first, InputIterator last); //range
-    RBT<T>& operator=(const RBT<T>&); //copy assn
+	RBT<T>& operator=(const RBT<T>&); //copy assn
 	void insert(T data);
 	vector<T> get_inorder() const;
 	vector<T> get_preorder() const;
 	vector<T> get_postorder() const;
-    bool search(T data) const;
+	bool search(T data) const;
 };
 
 
@@ -130,20 +133,20 @@ void RBT<T>::bst_insert_util(Node<T>* temp, Node<T>* node)
 		if(temp->right_)
 			bst_insert_util(temp->right_, node);
 		else
-        {
+        	{
 			temp->right_ = node;
-            node->parent_ = temp;
-        }
+            		node->parent_ = temp;
+        	}
 	}
 	else if(node->data_ < temp->data_)
 	{
 		if(temp->left_)
 			bst_insert_util(temp->left_, node);
 		else
-        {
+		{
 			temp->left_ = node;
-            node->parent_ = temp;
-        }
+			node->parent_ = temp;
+		}
 	}
 }
 
@@ -152,14 +155,14 @@ Node<T>* RBT<T>::bst_insert(T data)
 {
 	Node<T>* node_ptr = create_node(data);
 	if(root_ == nullptr)
-    {
-        root_ = node_ptr;
-    }
+	{
+        	root_ = node_ptr;
+    	}
 	else
 	{
 		bst_insert_util(root_, node_ptr);
 	}
-    return node_ptr;
+    	return node_ptr;
 }
 
 template<typename T>
@@ -176,22 +179,126 @@ bool RBT<T>::search(T data) const
 }
 
 template<typename T>
+void RBT<T>::rotate_right(Node<T> *node)
+{
+	Node<T> *left_node = node->left_;
+	node->left_ = left_node->right_;
+	if(left_node)
+	{
+		left_node->parent_ = node;
+	}
+	left_node->parent_ = node->parent_;
+	if(!node->parent_)
+	{
+		root_ = left_node;
+	}
+	else if(node == node->parent_->left_)
+	{
+		node->parent_->left_ = left_node;
+	}
+	else
+	{
+		node->parent_->right_ = left_node;
+	}
+	left_node->right_ = node;
+	node->parent_ = left_node;
+}
+
+template<typename T>
+void RBT<T>::rotate_left(Node<T> *node)
+{
+	Node<T> *right_node = node->right_;
+	node->right_ = right_node->left_;
+	if(right_node)
+	{
+		right_node->parent_ = node;
+	}
+	right_node->parent_ = node->parent_;
+	if(!node->parent_)
+	{
+		root_ = right_node;
+	}
+	else if(node == node->parent_->right_)
+	{
+		node->parent_->right_ = right_node;
+	}
+	else
+	{
+		node->parent_->right_ = right_node;
+	}
+	right_node->left_ = node;
+	node->parent_ = right_node;
+}
+
+template<typename T>
+void RBT<T>::rebalance(Node<T> *root, Node<T> *node_ptr)
+{
+	if(root == node_ptr)
+	{
+		node_ptr->colour_ == black;
+	}
+	else
+	{
+		Node<T>* parent_ptr = node_ptr->parent_;
+		if(parent_ptr->colour_ == black)
+			return;
+		Node<T>* grandparent_ptr = parent_ptr->parent_;
+		Node<T> *uncle_ptr;
+		if(parent_ptr == grandparent_ptr->left_)
+		{
+			uncle_ptr = grandparent_ptr->right_;
+		}
+		else
+		{
+			uncle_ptr = grandparent_ptr->left_;
+		}
+		if(uncle_ptr->colour_ == red)
+		{
+			parent_ptr->colour_ = black;
+			uncle_ptr->colour_ = black;
+			grandparent_ptr->colour_ = red;
+			rebalance(root, grandparent_ptr);
+		}
+		else //uncle is black
+		{
+			if(parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->left_) 
+			// Left left case (parent left of grandparent, node left of parent)
+			{
+				rotate_right(grandparent_ptr);
+				swap(grandparent_ptr->colour_ , parent_ptr->colour_);
+			}
+			else if(parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->right_)
+			//left right case (parent left of grandparent, node right of parent)
+			{
+				rotate_left(parent_ptr);
+				rotate_right(grandparent_ptr);
+				swap(grandparent_ptr->colour_ , node_ptr->colour_);
+			}
+			else if(parent_ptr == grandparent_ptr->right_ && node_ptr == node_ptr->parent_->right_)
+			//right right case (parent right of grandparent, node right of parent)
+			{
+				rotate_left(grandparent_ptr);
+				swap(grandparent_ptr->colour_ , parent_ptr->colour_);
+			}
+			else
+			//right left case (parent right of grandparent, node left of parent)
+			{
+				rotate_right(parent_ptr);
+				rotate_left(grandparent_ptr);
+				swap(grandparent_ptr->colour_ , node_ptr->colour_);
+			}
+		}
+	}
+}
+
+template<typename T>
 void RBT<T>::insert(T data)
 {
-    bool node_exists = search(data);
-    if(node_exists)
-        return;
+	bool node_exists = search(data);
+	if(node_exists)
+		return;
 	Node<T>* node_ptr = bst_insert(data);
-    if(root_ == node_ptr)
-    {
-        node_ptr -> colour_ = black;
-    }
-    else
-    {
-        Node<T>* parent_ptr = node_ptr->parent_;
-        Node<T>* 
-    }
-
+	rebalance(root_, node_ptr);
 }
 
 template<typename T>

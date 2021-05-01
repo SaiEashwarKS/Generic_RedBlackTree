@@ -55,7 +55,7 @@ int main()
     cout << "\n";
     #endif
 
-    #if 1
+    #if 0
     vector<int>v{10, 30, 20, 50, 40};
     RBT<int> tree(v.begin(), v.end());
     vector<int>v2{100, 300, 200, 500, 400};
@@ -85,6 +85,23 @@ int main()
     #endif
 
     
+    
+    
+    #if 1
+    RBT<int> tree;
+    tree.insert(50);
+    tree.insert(40);
+    //tree.insert(30);
+    vector<int> v = tree.get_preorder();
+    for(auto e: v)
+    {
+        
+        cout << e << "\t";
+    }
+    cout << "\n";
+    
+    
+    #endif
 
 	return 0;
 }

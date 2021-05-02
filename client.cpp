@@ -211,6 +211,7 @@ int main()
         cout << e << "\t";
     }
     cout << endl;
+    cout << tree.height() << endl;
     #endif
 
 	return 0;

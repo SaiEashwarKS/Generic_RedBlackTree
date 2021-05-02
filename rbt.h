@@ -47,6 +47,7 @@ private:
     Node<T> *succ_remove(Node<T> *node_ptr);
     Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
     Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
+    int height_util(Node<T> *node_ptr);
 
 public:
     RBT();  //ctor
@@ -66,6 +67,7 @@ public:
     friend RBT<T2> &operator+(const RBT<T2> &t1, const RBT<T2> &t2);
     T max();
     T min();
+    int height();
 };
 
 //-----------Node methods
@@ -635,4 +637,19 @@ void RBT<T>::rebalance_remove(Node<T> *node_ptr)
     }
 }
 
+template<typename T>
+int RBT<T>::height_util(Node<T> *node_ptr)
+{
+    if(node_ptr == nullptr)
+        return 0;
+    int left_height = height_util(node_ptr->left_);
+    int right_height = height_util(node_ptr->right_);
+    return left_height > right_height ? left_height + 1 : right_height + 1;
+}
+
+template<typename T>
+int RBT<T>::height()
+{
+    return height_util(root_);
+}
 #endif

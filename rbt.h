@@ -2,6 +2,7 @@
 #define RBT_H
 
 #include <vector>
+#include <queue>
 using namespace std;
 
 enum Colour
@@ -49,6 +50,7 @@ private:
     Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
     int height_util(Node<T> *node_ptr);
     int leaf_count_util(Node<T> *node_ptr);
+    void print_level_order_util(Node<T> *node_ptr);
 
 public:
     RBT();  //ctor
@@ -70,6 +72,7 @@ public:
     T min();
     int height();
     int leaf_count();
+    void print_level_order();
 };
 
 //-----------Node methods
@@ -670,5 +673,33 @@ int RBT<T>::leaf_count()
 {
     return leaf_count_util(root_);
 }
+
+template<typename T>
+void RBT<T>::print_level_order_util(Node<T> *node_ptr)
+{
+    if(node_ptr == nullptr)
+        return;
+    queue<Node<T>*> q;
+    Node<T>* curr_node_ptr;
+    q.push(node_ptr);
+    while(!q.empty())
+    {
+        curr_node_ptr = q.front();
+        q.pop();
+        cout << curr_node_ptr->data_ << "\t";
+        if(curr_node_ptr->left_)
+            q.push(curr_node_ptr->left_);
+        if(curr_node_ptr->right_)
+            q.push(curr_node_ptr->right_);
+    }
+    cout << "\n";
+}
+
+template<typename T>
+void RBT<T>::print_level_order()
+{
+    print_level_order_util(root_);
+}
+
 
 #endif

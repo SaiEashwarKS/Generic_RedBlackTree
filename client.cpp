@@ -213,6 +213,8 @@ int main()
     cout << endl;
     cout << "height : " << tree.height() << endl;
     cout << "leaf count : " << tree.leaf_count() << endl;
+    cout << "level order : " << endl;
+    tree.print_level_order();
     #endif
 
 	return 0;

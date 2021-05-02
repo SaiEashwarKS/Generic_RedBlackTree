@@ -211,7 +211,8 @@ int main()
         cout << e << "\t";
     }
     cout << endl;
-    cout << tree.height() << endl;
+    cout << "height : " << tree.height() << endl;
+    cout << "leaf count : " << tree.leaf_count() << endl;
     #endif
 
 	return 0;

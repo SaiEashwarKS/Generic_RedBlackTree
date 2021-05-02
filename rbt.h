@@ -48,6 +48,7 @@ private:
     Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
     Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
     int height_util(Node<T> *node_ptr);
+    int leaf_count_util(Node<T> *node_ptr);
 
 public:
     RBT();  //ctor
@@ -68,6 +69,7 @@ public:
     T max();
     T min();
     int height();
+    int leaf_count();
 };
 
 //-----------Node methods
@@ -652,4 +654,21 @@ int RBT<T>::height()
 {
     return height_util(root_);
 }
+
+template<typename T>
+int RBT<T>::leaf_count_util(Node<T> *node_ptr)
+{
+    if(node_ptr == nullptr)
+        return 0;
+    if(node_ptr->left_ == nullptr && node_ptr->right_ == nullptr)
+        return 1;
+    return leaf_count_util(node_ptr->left_) + leaf_count_util(node_ptr->right_);
+}
+
+template<typename T>
+int RBT<T>::leaf_count()
+{
+    return leaf_count_util(root_);
+}
+
 #endif

@@ -48,13 +48,37 @@ private:
     void remove_util(Node<T> *node_ptr);
     void rebalance_remove(Node<T> *node_ptr); //remove double black
     Node<T> *succ_remove(Node<T> *node_ptr);
-    Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
-    Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
+    static Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
+    static Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
     int height_util(Node<T> *node_ptr);
+    static Node<T>* inorder_successor(Node<T> *node_ptr);
+    static Node<T>* inorder_predecessor(Node<T> *node_ptr);
     int leaf_count_util(Node<T> *node_ptr);
     void print_level_order_util(Node<T> *node_ptr);
 
 public:
+    class Iterator
+    {
+        private:
+        Node<T>* iterator_;
+
+        public:
+        Iterator(Node<T> *node_ptr) : iterator_(node_ptr){};
+        const T& operator*();
+        bool operator==(const Iterator& rhs);
+        bool operator!=(const Iterator& rhs);
+        operator bool() const;
+        Iterator& operator++();
+        Iterator operator++(int);
+        Iterator& operator--();
+        Iterator operator--(int);
+
+        typedef T value_type;
+		typedef const Node<T>& reference; 
+		typedef const Node<T>* pointer; 
+		typedef bidirectional_iterator_tag iterator_category;
+    };
+
     RBT();  //ctor
     ~RBT(); //dtor
     void delete_node(Node<T> *node);
@@ -68,14 +92,18 @@ public:
     vector<T> get_inorder() const;
     vector<T> get_preorder() const;
     vector<T> get_postorder() const;
-    bool search(T data) const;
-    template <typename T2>
-    friend RBT<T2> &operator+(const RBT<T2> &t1, const RBT<T2> &t2);
-    T max();
-    T min();
+    Iterator find(T data) const;
+    template <typename T2, typename Compare2>
+    friend RBT<T2, Compare2> &operator+(const RBT<T2, Compare2> &t1, const RBT<T2, Compare2> &t2);
+    template <typename T2, typename Compare2>
+    friend RBT<T2, Compare2> &operator-(const RBT<T2, Compare2> &t1, const RBT<T2, Compare2> &t2);
+    Iterator max();
+    Iterator min();
     int height();
     int leaf_count();
     void print_level_order();
+    Iterator begin() const;
+    Iterator end() const;
 };
 
 //-----------Node methods
@@ -105,6 +133,18 @@ RBT<T, Compare>::RBT(InputIterator first, InputIterator last) : root_(nullptr), 
 template<typename T, typename Compare>
 RBT<T, Compare>::RBT(initializer_list<T> init_list) : RBT(init_list.begin(), init_list.end())
 {}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::begin() const
+{
+    return Iterator(min_subtree(root_));
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::end() const
+{
+    return nullptr;
+}
 
 template <typename T, typename Compare>
 RBT<T, Compare>::~RBT()
@@ -150,9 +190,17 @@ template<typename T, typename Compare>
 RBT<T, Compare> &operator+(const RBT<T, Compare> &t1, const RBT<T, Compare> &t2)
 {
     RBT<T, Compare> *res_tree = new RBT<T, Compare>(t1);
-    vector<T> preorder_vector = t2.get_preorder();
-    for (auto node : preorder_vector)
+    for (auto node : t2)
         res_tree->insert(node);
+    return *res_tree;
+}
+
+template<typename T, typename Compare>
+RBT<T, Compare> &operator-(const RBT<T, Compare> &t1, const RBT<T, Compare> &t2)
+{
+    RBT<T, Compare> *res_tree = new RBT<T, Compare>(t1);
+    for (auto node : t2)
+        res_tree->remove(node);
     return *res_tree;
 }
 
@@ -204,19 +252,19 @@ Node<T> *RBT<T, Compare>::bst_insert(T data)
 }
 
 template<typename T, typename Compare>
-bool RBT<T, Compare>::search(T data) const
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::find(T data) const
 {
-    Node<T> *node = root_;
-    while (node)
+    Node<T> *node_ptr = root_;
+    while (node_ptr)
     {
-        if (node->data_ == data)
-            return true;
-        if(compare_(data, node->data_))
-            node =  node->left_;
+        if (node_ptr->data_ == data)
+            return Iterator(node_ptr);
+        if(compare_(data, node_ptr->data_))
+            node_ptr =  node_ptr->left_;
         else
-            node = node->right_;
+            node_ptr = node_ptr->right_;
     }
-    return false;
+    return nullptr;
 }
 
 template<typename T, typename Compare>
@@ -335,9 +383,9 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *root, Node<T> *node_ptr)
 template<typename T, typename Compare>
 void RBT<T, Compare>::insert(T data)
 {
-    bool node_exists = search(data);
-    //cout << "search result : " << node_exists << "\n";
-    if (node_exists)
+    auto node_iter = find(data);
+    //cout << "find result : " << node_exists << "\n";
+    if (node_iter)
         return;
     Node<T> *node_ptr = bst_insert(data);
     //cout << "bst insert done, node_ptr : " << node_ptr << "\n";
@@ -420,9 +468,9 @@ Node<T> *RBT<T, Compare>::max_subtree(Node<T> *node_ptr)
 }
 
 template<typename T, typename Compare>
-T RBT<T, Compare>::max()
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::max()
 {
-    return max_subtree(root_)->data_;
+    return Iterator(max_subtree(root_));
 }
 
 template<typename T, typename Compare>
@@ -435,9 +483,9 @@ Node<T> *RBT<T, Compare>::min_subtree(Node<T> *node_ptr)
 }
 
 template<typename T, typename Compare>
-T RBT<T, Compare>::min()
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::min()
 {
-    return min_subtree(root_)->data_;
+    return Iterator(min_subtree(root_));
 }
 
 template<typename T, typename Compare>
@@ -445,7 +493,7 @@ void RBT<T, Compare>::remove(T data)
 {
     if (root_ == nullptr)
         return;
-    if (!search(data)) //node doesn't exist
+    if (!find(data)) //node doesn't exist
         return;
     Node<T> *node_ptr = root_;
     while (node_ptr->data_ != data)
@@ -709,6 +757,97 @@ template<typename T, typename Compare>
 void RBT<T, Compare>::print_level_order()
 {
     print_level_order_util(root_);
+}
+
+template<typename T, typename Compare>
+Node<T>* RBT<T, Compare>::inorder_successor(Node<T> *node_ptr)
+{
+    if(node_ptr == nullptr)
+        return nullptr;
+    if(node_ptr->right_)
+        return min_subtree(node_ptr->right_);
+    Node<T>* parent_ptr = node_ptr->parent_;
+    //find a node which is a left child, return it's parent
+    while(parent_ptr && node_ptr == parent_ptr->right_)
+    {
+        node_ptr = parent_ptr;
+        parent_ptr = node_ptr->parent_;
+    }
+    return parent_ptr;
+}
+
+template<typename T, typename Compare>
+Node<T>* RBT<T, Compare>::inorder_predecessor(Node<T> *node_ptr)
+{
+    if(node_ptr == nullptr)
+        return nullptr;
+    if(node_ptr->left_)
+        return max_subtree(node_ptr->left_);
+    Node<T>* parent_ptr = node_ptr->parent_;
+    //find a node which is a right child, return it's parent
+    while(parent_ptr && node_ptr == parent_ptr->left_)
+    {
+        node_ptr = parent_ptr;
+        parent_ptr = node_ptr->parent_;
+    }
+    return parent_ptr;
+}
+
+
+
+//-------------Iterator functions
+template<typename T, typename Compare>
+const T& RBT<T, Compare>::Iterator::operator*()
+{
+    return iterator_->data_;
+}
+
+template<typename T, typename Compare>
+RBT<T, Compare>::Iterator::operator bool() const
+{
+    return iterator_ != nullptr;
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator++()
+{
+    iterator_ = inorder_successor(iterator_);
+    return *this;
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator++(int)
+{
+    Iterator temp(*this);
+    ++(*this);
+    return temp;
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator--()
+{
+    iterator_ = inorder_predecessor(iterator_);
+    return *this;
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator--(int)
+{
+    Iterator temp(*this);
+    --(*this);
+    return temp;
+}
+
+template<typename T, typename Compare>
+bool RBT<T, Compare>::Iterator::operator==(const typename RBT<T, Compare>::Iterator& rhs)
+{
+    return iterator_==rhs.iterator_;
+}
+
+template<typename T, typename Compare>
+bool RBT<T, Compare>::Iterator::operator!=(const typename RBT<T, Compare>::Iterator& rhs)
+{
+    return !(*this==rhs);
 }
 
 

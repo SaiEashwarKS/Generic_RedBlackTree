@@ -307,6 +307,8 @@ int main()
     #if 1
     RBT<int> t1 {1, 2, 3};
     RBT<int> t2 {2, 3, 5, 6, 7};
+    cout << "t1 size (3) " << t1.size() <<endl;
+    cout << "t2 size (5) " << t2.size() <<endl;
     RBT<int> t3; 
     t3 = t1 + t2;
     RBT<int> t4 = t1 - t2;

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <initializer_list>
 using namespace std;
 
 enum Colour
@@ -57,6 +58,7 @@ public:
     ~RBT(); //dtor
     void delete_node(Node<T> *node);
     RBT(const RBT<T> &); //copy
+    RBT(initializer_list<T> init_list); //braced-init-list
     template <typename InputIterator>
     RBT(InputIterator first, InputIterator last); //range
     RBT<T> &operator=(const RBT<T> &);            //copy assn
@@ -88,6 +90,22 @@ RBT<T>::RBT() : root_(nullptr)
 }
 
 template <typename T>
+template <typename InputIterator>
+RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
+{
+    InputIterator it(first);
+    while (it != last)
+    {
+        insert(*it);
+        ++it;
+    }
+}
+
+template<typename T>
+RBT<T>::RBT(initializer_list<T> init_list) : RBT(init_list.begin(), init_list.end())
+{}
+
+template <typename T>
 RBT<T>::~RBT()
 {
     if (root_)
@@ -114,18 +132,6 @@ RBT<T>::RBT(const RBT<T> &rhs) : root_(nullptr)
     vector<T> preorder_vector = rhs.get_preorder();
     for (auto node : preorder_vector)
         this->insert(node);
-}
-
-template <typename T>
-template <typename InputIterator>
-RBT<T>::RBT(InputIterator first, InputIterator last) : root_(nullptr)
-{
-    InputIterator it(first);
-    while (it != last)
-    {
-        insert(*it);
-        ++it;
-    }
 }
 
 template <typename T>

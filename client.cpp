@@ -192,7 +192,7 @@ int main()
     cout << "\n";
     #endif
 
-    #if 1
+    #if 0
     vector<int> v {1, 2,3, 4, 5, 6, 7, 8, 9, 10};
     RBT<int> tree(v.begin(), v.end());
     vector<int> v3;
@@ -205,6 +205,21 @@ int main()
 
     tree.remove(5);
     tree.remove(8);
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    cout << "height : " << tree.height() << endl;
+    cout << "leaf count : " << tree.leaf_count() << endl;
+    cout << "level order : " << endl;
+    tree.print_level_order();
+    #endif
+
+    #if 1
+    RBT<int> tree {1, 2, 3};
+    vector<int> v3;
     v3 = tree.get_preorder();
     for(auto e: v3)
     {

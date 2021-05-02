@@ -135,7 +135,7 @@ int main()
     cout << "\n";
     #endif
 
-    #if 1
+    #if 0
     vector<string> v{"cde", "abc", "xyz", "abc"};
     RBT<string> tree(v.begin(), v.end());
     vector<string> v2 = tree.get_preorder();
@@ -146,6 +146,31 @@ int main()
 
     cout << "\n";
     cout << tree.min() << "\t" << tree.max() << endl;
+    #endif
+
+    #if 1
+    vector<int> v{10, 20, 30};
+    RBT<int> tree;
+    vector<int> v3;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(5);
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    //tree.remove(5);
+    //tree.remove(10);
+    tree.remove(20);
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+
+    cout << "\n";
     #endif
 
 	return 0;

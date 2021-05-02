@@ -1,8 +1,9 @@
 #include<iostream>
 #include<vector>
 #include<string>
+#include<list>
 
-#include"rbt.h"
+#include "rbt.h"
 using namespace std;
 
 int main()
@@ -217,7 +218,7 @@ int main()
     tree.print_level_order();
     #endif
 
-    #if 1
+    #if 0
     RBT<int> tree {1, 2, 3};
     vector<int> v3;
     v3 = tree.get_preorder();
@@ -230,6 +231,95 @@ int main()
     cout << "leaf count : " << tree.leaf_count() << endl;
     cout << "level order : " << endl;
     tree.print_level_order();
+    #endif
+
+    #if 0
+    RBT<int, greater<int>> tree {1, 2, 3};
+    vector<int> v3;
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    #endif
+
+    #if 0
+    struct my_compare
+    {
+        bool operator()(const string& a, const string& b)const{return a.size() < b.size();}
+    };
+    RBT<string, my_compare>tree{"aa", "a", "aaa"};
+    vector<string> v3;
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    #endif
+
+    #if 0
+    RBT<int> tree {5, 4, 1, 2, 3};
+    cout << *tree.begin() << endl;
+    for(auto e: tree)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    auto it = tree.begin();
+    while(it != tree.end())
+    {
+        cout << *it << "\t";
+        ++it;
+    }
+    cout << endl;
+
+    cout << "max : " << *tree.max() << " min : " << *tree.min() << endl;
+    #endif
+
+    #if 0
+    RBT<list<string>> tree;
+    tree.insert({"b", "a", "c"});
+    tree.insert({"x", "y", "w"});
+    tree.insert({"a", "b", "c"});
+    tree.insert({"m", "o", "n", "i", "s", "h"});
+    tree.insert({"s", "ai"});
+    tree.insert({"n", "m", "p"});
+    tree.insert({"d", "e"});
+    tree.insert({"o", "p"});
+    tree.insert({"g", "g"});
+    tree.insert({"w", "p"});
+    tree.insert({"g", "g"});
+    tree.insert({"ondu"});
+    tree.insert({"eradu", "mooru"});
+
+    for(auto e : tree)
+    {
+        for(auto e2 : e)
+        {
+            cout << e2 << "\t";
+        }
+        cout << endl;
+    }
+    #endif
+
+    #if 1
+    RBT<int> t1 {1, 2, 3};
+    RBT<int> t2 {2, 3, 5, 6, 7};
+    RBT<int> t3; 
+    t3 = t1 + t2;
+    RBT<int> t4 = t1 - t2;
+    for(auto e: t3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    for(auto e: t4)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
     #endif
 
 	return 0;

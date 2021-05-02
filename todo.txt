@@ -3,3 +3,4 @@ operator -
 height
 leaf count
 use compare
+level order

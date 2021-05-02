@@ -43,8 +43,8 @@ private:
     void rotate_left(Node<T> *node);
     void rotate_right(Node<T> *node);
     void remove_util(Node<T> *node_ptr);
-    void replace_node(Node<T> *a, Node<T> *b);
-    void rebalance_remove(Node<T> *node_ptr);
+    void rebalance_remove(Node<T> *node_ptr); //remove double black
+    Node<T> *succ_remove(Node<T> *node_ptr);
     Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
     Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
 
@@ -442,133 +442,197 @@ void RBT<T>::remove(T data)
 }
 
 template <typename T>
-void RBT<T>::remove_util(Node<T> *node_ptr)
+Node<T> *RBT<T>::succ_remove(Node<T> *node_ptr)
 {
-    Node<T> *temp_ptr = node_ptr;
-    Colour original_colour = temp_ptr->colour_;
-    Node<T> *succ_ptr;
+    //node_ptr has 2 children
+    if (node_ptr->left_ != nullptr && node_ptr->right_ != nullptr)
+    {
+        return min_subtree(node_ptr->right_); //inorder successor
+    }
+    //node_ptr is leaf
+    if (node_ptr->left_ == nullptr && node_ptr->right_ == nullptr)
+    {
+        return nullptr;
+    }
+    //mode_ptr has one child
     if (node_ptr->left_ == nullptr)
     {
-        succ_ptr = node_ptr->right_;
-        replace_node(node_ptr, node_ptr->right_);
+        return node_ptr->right_;
     }
-    else if (node_ptr->right_ == nullptr)
+    return node_ptr->left_;
+}
+
+template <typename T>
+void RBT<T>::remove_util(Node<T> *node_ptr)
+{
+    Node<T> *succ_ptr = succ_remove(node_ptr);
+    bool succ_is_black = (succ_ptr == nullptr || succ_ptr->colour_ == black);
+    bool node_is_black = (node_ptr->colour_ == black);
+    bool both_are_black = succ_is_black && node_is_black;
+    Node<T> *parent_ptr = node_ptr->parent_;
+
+    if (succ_ptr == nullptr) //node_ptr is leaf
     {
-        succ_ptr = node_ptr->left_;
-        replace_node(node_ptr, node_ptr->left_);
-    }
-    else
-    {
-        temp_ptr = min_subtree(node_ptr->right_);
-        original_colour = temp_ptr->colour_;
-        succ_ptr = temp_ptr->right_;
-        if (temp_ptr->parent_ = node_ptr)
+        if (root_ == node_ptr)
         {
-            if(succ_ptr != nullptr)
-                succ_ptr->parent_ = temp_ptr;
+            root_ = nullptr;
         }
         else
         {
-            replace_node(temp_ptr, temp_ptr->right_);
-            temp_ptr->right_ = node_ptr->right_;
-            temp_ptr->right_->parent_ = temp_ptr;
+            if (both_are_black) //fix double black at node_ptr
+            {
+                rebalance_remove(node_ptr);
+            }
+            else //either succ_ptr or node_ptr is red
+            {
+                Node<T> *sibling_ptr;
+                if (parent_ptr)
+                {
+                    if (node_ptr == parent_ptr->left_)
+                        sibling_ptr = parent_ptr->right_;
+                    else
+                        sibling_ptr = parent_ptr->left_;
+                }
+                if (sibling_ptr != nullptr)
+                {
+                    sibling_ptr->colour_ = red;
+                }
+            }
+
+            //delete node_ptr
+            if (node_ptr == parent_ptr->left_)
+                parent_ptr->left_ = nullptr;
+            else
+                parent_ptr->right_ = nullptr;
+            delete node_ptr;
         }
-        replace_node(node_ptr, temp_ptr);
-        temp_ptr->left_ = node_ptr->left_;
-        temp_ptr->left_->parent_ = temp_ptr;
-        temp_ptr->colour_ = node_ptr->colour_;
+        return;
     }
-    delete node_ptr;
-    if (original_colour == black)
+
+    if (node_ptr->left_ == nullptr || node_ptr->right_ == nullptr) //node_ptr has only one child
     {
-        rebalance_remove(succ_ptr);
+        if (root_ == node_ptr)
+        {
+            //node_ptr is root; assign data of succ_ptr to node_ptr and delete succ_ptr
+            node_ptr->data_ = succ_ptr->data_;
+            node_ptr->left_ = node_ptr->right_ = nullptr;
+            delete succ_ptr;
+        }
+        else
+        {
+            if (node_ptr == parent_ptr->left_)
+                parent_ptr->left_ = succ_ptr;
+            else
+                parent_ptr->right_ = succ_ptr;
+            delete node_ptr;
+            succ_ptr->parent_ = parent_ptr;
+
+            if (both_are_black) //fix double black at succ_ptr
+            {
+                rebalance_remove(succ_ptr);
+            }
+            else
+            {
+                succ_ptr->colour_ = black;
+            }
+        }
+        return;
     }
+    //node_ptr has both children
+    //swap data with successor and delete the successor
+    swap(node_ptr->data_, succ_ptr->data_);
+    remove_util(succ_ptr);
 }
 
 template <typename T>
 void RBT<T>::rebalance_remove(Node<T> *node_ptr)
 {
-    Node<T> *sibling_ptr;
-    while (node_ptr != root_ && node_ptr->colour_ == black)
+    if (node_ptr == root_)
     {
-        if (node_ptr == node_ptr->parent_->left_)
+        return;
+    }
+    Node<T> *parent_ptr = node_ptr->parent_;
+    Node<T> *sibling_ptr;
+    if(node_ptr == parent_ptr->left_)
+    {
+        sibling_ptr = parent_ptr->right_;
+    }
+    else
+    {
+        sibling_ptr = parent_ptr->left_;
+    }
+    if(sibling_ptr == nullptr)
+    {
+        rebalance_remove(parent_ptr);
+    }
+    else
+    {
+        if(sibling_ptr->colour_ == red)
         {
-            sibling_ptr = node_ptr->parent_->right_;
-            if (sibling_ptr->colour_ == red)
-            {
-                sibling_ptr->colour_ = black;
-                node_ptr->parent_->colour_ = red;
-                rotate_left(node_ptr->parent_);
-                sibling_ptr = node_ptr->parent_->right_;
-            }
-            if(sibling_ptr->left_->colour_ == black && sibling_ptr->right_->colour_ == black)
-            {
-                sibling_ptr->colour_ = red;
-                node_ptr = node_ptr->parent_;
+            parent_ptr->colour_ = red;
+            sibling_ptr->colour_ = black;
+            if(sibling_ptr == parent_ptr->left_)
+            {   
+                rotate_right(parent_ptr);
             }
             else
             {
-                if(sibling_ptr->right_->colour_ == black)
-                {
-                    sibling_ptr->left_->colour_ = black;
-                    sibling_ptr->colour_ = red;
-                    rotate_right(sibling_ptr);
-                    sibling_ptr = node_ptr->parent_->right_;
-                }
-                sibling_ptr->colour_ = node_ptr->parent_->colour_;
-                node_ptr->parent_->colour_ = black;
-                sibling_ptr->right_->colour_ = black;
-                rotate_left(node_ptr->parent_);
-                node_ptr = root_;
+                rotate_left(parent_ptr);
             }
+            rebalance_remove(node_ptr);
         }
         else
         {
-            sibling_ptr = node_ptr->parent_->left_;
-            if(sibling_ptr->colour_ == red)
+            bool sib_has_red_child = ((sibling_ptr->left_ && sibling_ptr->left_->colour_== red)
+                                    || sibling_ptr->right_ && sibling_ptr->right_->colour_ == red);
+            if(sib_has_red_child)
             {
-                sibling_ptr->colour_ = black;
-                node_ptr->parent_->colour_ = red;
-                rotate_right(node_ptr->parent_);
-                sibling_ptr = node_ptr->parent_->left_;
+                if(sibling_ptr->left_ && sibling_ptr->left_->colour_ == red)
+                {
+                    if(sibling_ptr == parent_ptr->left_)
+                    {
+                        sibling_ptr->left_->colour_ = sibling_ptr->colour_;
+                        sibling_ptr->colour_ = parent_ptr->colour_;
+                        rotate_right(parent_ptr);
+                    }
+                    else
+                    {
+                        sibling_ptr->left_->colour_ = parent_ptr->colour_;
+                        rotate_right(sibling_ptr);
+                        rotate_left(parent_ptr);
+                    }
+                }
+                else
+                {
+                    if(sibling_ptr == parent_ptr->left_)
+                    {
+                        sibling_ptr->right_->colour_ = sibling_ptr->colour_;
+                        rotate_right(sibling_ptr);
+                        rotate_right(parent_ptr);
+                    }
+                    else
+                    {
+                        sibling_ptr->right_->colour_ = sibling_ptr->colour_;
+                        sibling_ptr->colour_ = parent_ptr->colour_;
+                        rotate_left(parent_ptr);
+                    }
+                }
+                parent_ptr->colour_ = black;
             }
-            if(sibling_ptr->right_->colour_ == black && sibling_ptr->right_->colour_ == black)
+            else //2 black children
             {
                 sibling_ptr->colour_ = red;
-                node_ptr = node_ptr->parent_;
-            }
-            else
-            {
-                if(sibling_ptr->left_->colour_ == black)
+                if(parent_ptr->colour_ = black)
                 {
-                    sibling_ptr->right_->colour_ = black;
-                    sibling_ptr->colour_ = red;
-                    rotate_left(sibling_ptr);
-                    sibling_ptr = node_ptr->parent_->left_;
+                    rebalance_remove(parent_ptr);
                 }
-                sibling_ptr->colour_ = node_ptr->parent_->colour_;
-                node_ptr->parent_->colour_ = black;
-                sibling_ptr->left_->colour_ = black;
-                rotate_right(node_ptr->parent_);
-                node_ptr = root_;
+                else
+                {
+                    parent_ptr->colour_ = black;
+                }
             }
         }
     }
-    if(node_ptr != nullptr)
-        node_ptr->colour_ = black;
-}
-
-template <typename T>
-void RBT<T>::replace_node(Node<T> *a, Node<T> *b)
-{
-    if (a->parent_ == nullptr) //root points to a
-        root_ = b;
-    else if (a == a->parent_->left_)
-        a->parent_->left_ = b;
-    else
-        a->parent_->right_ = b;
-    if(b != nullptr)
-        b->parent_ = a->parent_;
 }
 
 #endif

@@ -148,22 +148,41 @@ int main()
     cout << tree.min() << "\t" << tree.max() << endl;
     #endif
 
-    #if 1
-    vector<int> v{10, 20, 30};
+    #if 0
     RBT<int> tree;
     vector<int> v3;
     tree.insert(10);
     tree.insert(20);
     tree.insert(5);
+    // tree.remove(20);
+    // tree.insert(20);
+    tree.insert(30);
+    tree.insert(1);
+    tree.insert(7);
+    tree.insert(15);
+    tree.insert(199);
+    tree.insert(0);
+    tree.insert(32);
     v3 = tree.get_preorder();
     for(auto e: v3)
     {
         cout << e << "\t";
     }
     cout << endl;
-    //tree.remove(5);
-    //tree.remove(10);
+    
+    tree.remove(10);
     tree.remove(20);
+    tree.remove(5);
+    tree.remove(30);
+    tree.remove(1);
+    tree.remove(7);
+    tree.remove(15);
+    tree.remove(199);
+    tree.remove(30);
+    tree.remove(0);
+    tree.remove(1);
+    tree.remove(32);
+    tree.remove(199);
     v3 = tree.get_preorder();
     for(auto e: v3)
     {
@@ -171,6 +190,27 @@ int main()
     }
 
     cout << "\n";
+    #endif
+
+    #if 1
+    vector<int> v {1, 2,3, 4, 5, 6, 7, 8, 9, 10};
+    RBT<int> tree(v.begin(), v.end());
+    vector<int> v3;
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+
+    tree.remove(5);
+    tree.remove(8);
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
     #endif
 
 	return 0;

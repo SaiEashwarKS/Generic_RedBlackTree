@@ -1,2 +1,5 @@
 variadic ctor
 operator -
+height
+leaf count
+use compare

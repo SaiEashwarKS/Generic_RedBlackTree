@@ -217,7 +217,7 @@ int main()
     tree.print_level_order();
     #endif
 
-    #if 1
+    #if 0
     RBT<int> tree {1, 2, 3};
     vector<int> v3;
     v3 = tree.get_preorder();
@@ -230,6 +230,32 @@ int main()
     cout << "leaf count : " << tree.leaf_count() << endl;
     cout << "level order : " << endl;
     tree.print_level_order();
+    #endif
+
+    #if 0
+    RBT<int, greater<int>> tree {1, 2, 3};
+    vector<int> v3;
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    #endif
+
+    #if 1
+    struct my_compare
+    {
+        bool operator()(const string& a, const string& b)const{return a.size() < b.size();}
+    };
+    RBT<string, my_compare>tree{"aa", "a", "aaa"};
+    vector<string> v3;
+    v3 = tree.get_preorder();
+    for(auto e: v3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
     #endif
 
 	return 0;

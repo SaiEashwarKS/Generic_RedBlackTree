@@ -22,7 +22,7 @@ Commands to run to execute the files :
 
 ----------------------------
 
-The interface and intent of the classes and their functions.
+The interface and intent of the classes and their functions :
 
 enum Colour :
     - has two colours : black and red
@@ -31,7 +31,7 @@ enum Colour :
 
 class Node :
 - Template parameters : 
-    - T : data type of the data that is to be stored in the tree
+    - T : datatype of the data that is to be stored in the tree
 
 - Private fields :
     - data_ : T
@@ -57,7 +57,7 @@ class Node :
 
 class RBT :
 - Template parameters :
-    - T : data type of the data that is to be stored in the tree
+    - T : datatype of the data that is to be stored in the tree
     - Compare : functor class which has operator() overloaded to provide custom predicate to compare two nodes
         - default type : less<T>
 
@@ -73,7 +73,7 @@ class RBT :
     - bst_insert_util(Node<T>* root, Node<T>* node) : void
         - performs BST insertion on the node to the tree rooted by root
     - create_node : Node<T>*
-        - calls the constructor of Node class to create a new node and returns a pointre to the new node
+        - calls the constructor of Node class to create a new node and returns a pointer to the new node
     - get_inorder_util(Node<T> *node, vector<T> *res) : void 
         - pushes the data in nodes to res in inorder
     - get_postorder_util(Node<T> *node, vector<T> *res) : void 
@@ -81,7 +81,6 @@ class RBT :
     - get_preorder_util(Node<T> *node, vector<T> *res) : void 
         - pushes the data in nodes to res in preorder
     - 
-
 
 - Public fields :
     - class Iterator :
@@ -99,7 +98,7 @@ class RBT :
             - returns true if the iterator_ is not nullptr
         - const T& operator*() :
             - overload dereferencing
-            - returns the data pointed by iterator_
+            - returns the data pointed to by iterator_
         - operator==(const Iterator& rhs) : bool
             - return true if both the iterators point to the same node
         - operator!=(const Iterator& rhs) : bool
@@ -136,20 +135,21 @@ class RBT :
     - Destructor : 
         - ~RBT()
             - calls delete_node on root_
+
     - begin() const : Iterator
         - return iterator to the minimum node of the tree
     - delete_node(Node<T>* node) : void
-        - deletes nodes rooted by node in postorder
+        - deletes nodes rooted by node
     - end() const : Iterator
         - return nullptr
     - find(T data) : Iterator
         - if data is present, return iterator to the node containing the data, else return nullptr
     - get_inorder() const : vector<T>
-        - returns a vector of data contained in inorder
+        - returns a vector of data contained, in inorder
     - get_postorder() const : vector<T>
-        - returns a vector of data contained in postorder
+        - returns a vector of data contained, in postorder
     - get_preorder() const : vector<T>
-        - returns a vector of data contained in preorder
+        - returns a vector of data contained, in preorder
     - height() : int
         - return height of the tree
     - insert(T data) : void

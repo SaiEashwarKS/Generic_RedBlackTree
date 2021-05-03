@@ -49,7 +49,7 @@ private:
     static Node<T> *max_subtree(Node<T> *node_ptr); //max of the subtree rooted by the node
     static Node<T> *min_subtree(Node<T> *node_ptr); //min of the subtree rooted by the node
     void print_level_order_util(Node<T> *node_ptr);
-    void rebalance_insert(Node<T> *root, Node<T> *node_ptr);
+    void rebalance_insert(Node<T> *node_ptr);
     void rebalance_remove(Node<T> *node_ptr); //remove double black
     void remove_util(Node<T> *node_ptr);
     void rotate_left(Node<T> *node);
@@ -293,9 +293,9 @@ void RBT<T, Compare>::print_level_order_util(Node<T> *node_ptr)
 }
 
 template<typename T, typename Compare>
-void RBT<T, Compare>::rebalance_insert(Node<T> *root, Node<T> *node_ptr)
+void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
 {
-    if (root == node_ptr)
+    if (root_ == node_ptr)
     {
         node_ptr->colour_ = black;
     }
@@ -319,7 +319,7 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *root, Node<T> *node_ptr)
             parent_ptr->colour_ = black;
             uncle_ptr->colour_ = black;
             grandparent_ptr->colour_ = red;
-            rebalance_insert(root, grandparent_ptr);
+            rebalance_insert(grandparent_ptr);
         }
         else //uncle is black
         {
@@ -737,7 +737,7 @@ void RBT<T, Compare>::insert(T data)
         return;
     Node<T> *node_ptr = bst_insert(data);
     //cout << "bst insert done, node_ptr : " << node_ptr << "\n";
-    rebalance_insert(root_, node_ptr);
+    rebalance_insert(node_ptr);
 }
 
 template<typename T, typename Compare>
@@ -819,7 +819,8 @@ int RBT<T, Compare>::size()
 
 //-------------Iterator functions
 template<typename T, typename Compare>
-RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr) : iterator_(node_ptr){};
+RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr) : iterator_(node_ptr)
+{};
 
 template<typename T, typename Compare>
 RBT<T, Compare>::Iterator::operator bool() const
@@ -851,6 +852,8 @@ typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator++(int)
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator--()
 {
+    if(!iterator_)
+        return nullptr;
     iterator_ = inorder_predecessor(iterator_);
     return *this;
 }

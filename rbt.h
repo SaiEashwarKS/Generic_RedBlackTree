@@ -39,9 +39,9 @@ private:
     Node<T> *bst_insert(T data);
     void bst_insert_util(Node<T> *temp, Node<T> *node);
     Node<T> *create_node(T data);
-    void get_inorder_util(Node<T> *, vector<T> *) const;
-    void get_postorder_util(Node<T> *, vector<T> *) const;
-    void get_preorder_util(Node<T> *, vector<T> *) const;
+    void get_inorder_util(Node<T> *node, vector<T> *res) const;
+    void get_postorder_util(Node<T> *node, vector<T> *res) const;
+    void get_preorder_util(Node<T> *node, vector<T> *res) const;
     int height_util(Node<T> *node_ptr);
     static Node<T>* inorder_predecessor(Node<T> *node_ptr);
     static Node<T>* inorder_successor(Node<T> *node_ptr);
@@ -55,7 +55,7 @@ private:
     void rotate_left(Node<T> *node);
     void rotate_right(Node<T> *node);
     int size_util(Node<T> *node_ptr);
-    Node<T> *succ_remove(Node<T> *node_ptr);
+    Node<T> *succ_remove(Node<T> *node_ptr); //get successor while performing remove
 
 public:
     class Iterator
@@ -135,26 +135,26 @@ Node<T> *RBT<T, Compare>::bst_insert(T data)
 }
 
 template<typename T, typename Compare>
-void RBT<T, Compare>::bst_insert_util(Node<T> *temp, Node<T> *node)
+void RBT<T, Compare>::bst_insert_util(Node<T> *root, Node<T> *node)
 {
-    if (!compare_(node->data_, temp->data_))
+    if (!compare_(node->data_, root->data_))
     {
-        if (temp->right_)
-            bst_insert_util(temp->right_, node);
+        if (root->right_)
+            bst_insert_util(root->right_, node);
         else
         {
-            temp->right_ = node;
-            node->parent_ = temp;
+            root->right_ = node;
+            node->parent_ = root;
         }
     }
-    else if (compare_(node->data_, temp->data_))
+    else if (compare_(node->data_, root->data_))
     {
-        if (temp->left_)
-            bst_insert_util(temp->left_, node);
+        if (root->left_)
+            bst_insert_util(root->left_, node);
         else
         {
-            temp->left_ = node;
-            node->parent_ = temp;
+            root->left_ = node;
+            node->parent_ = root;
         }
     }
 }
@@ -852,8 +852,6 @@ typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator++(int)
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator--()
 {
-    if(!iterator_)
-        return nullptr;
     iterator_ = inorder_predecessor(iterator_);
     return *this;
 }

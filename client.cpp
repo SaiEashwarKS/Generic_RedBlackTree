@@ -324,7 +324,7 @@ int main()
     cout << endl;
     #endif
 
-    #if 1
+    #if 0
     RBT<int> t1 {1, 2, 3};
     RBT<int> t3(t1);
     for(auto e: t3)
@@ -333,6 +333,18 @@ int main()
     }
     cout << endl;
     #endif
+
+    #if 1
+    RBT<int> t1 {6, 7, 8,1, 2, 3, 4, 5, 9, 10};
+    RBT<int> t3(t1);
+    for(auto e: t3)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    #endif
+
+
 
 	return 0;
 }

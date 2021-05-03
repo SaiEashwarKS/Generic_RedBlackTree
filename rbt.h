@@ -1,6 +1,8 @@
 #ifndef RBT_H
 #define RBT_H
 
+#define DEBUG 1
+
 #include <vector>
 #include <queue>
 #include <initializer_list>
@@ -326,12 +328,19 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             if (parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->left_)
             // Left left case (parent left of grandparent, node left of parent)
             {
+                #if DEBUG
+                cout << "Performing right rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                #endif
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
             }
             else if (parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->right_)
             //left right case (parent left of grandparent, node right of parent)
             {
+                #if DEBUG
+                cout << "Performing left rotation on " << parent_ptr->data_ << " colour:"<<parent_ptr->colour_<<endl;
+                cout << "Performing right rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                #endif
                 rotate_left(parent_ptr);
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);
@@ -339,12 +348,19 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             else if (parent_ptr == grandparent_ptr->right_ && node_ptr == node_ptr->parent_->right_)
             //right right case (parent right of grandparent, node right of parent)
             {
+                #if DEBUG
+                cout << "Performing left rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                #endif
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
             }
             else
             //right left case (parent right of grandparent, node left of parent)
             {
+                #if DEBUG
+                cout << "Performing right rotation on " << parent_ptr->data_ << " colour:"<<parent_ptr->colour_<<endl;
+                cout << "Performing left rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                #endif
                 rotate_right(parent_ptr);
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);

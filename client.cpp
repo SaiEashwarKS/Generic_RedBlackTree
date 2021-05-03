@@ -304,7 +304,7 @@ int main()
     }
     #endif
 
-    #if 1
+    #if 0
     RBT<int> t1 {1, 2, 3};
     RBT<int> t2 {2, 3, 5, 6, 7};
     cout << "t1 size (3) " << t1.size() <<endl;
@@ -318,6 +318,16 @@ int main()
     }
     cout << endl;
     for(auto e: t4)
+    {
+        cout << e << "\t";
+    }
+    cout << endl;
+    #endif
+
+    #if 1
+    RBT<int> t1 {1, 2, 3};
+    RBT<int> t3(t1);
+    for(auto e: t3)
     {
         cout << e << "\t";
     }

@@ -64,8 +64,8 @@ public:
         Node<T>* iterator_;
 
         public:
-        operator bool() const;
         Iterator(Node<T> *node_ptr);
+        operator bool() const;
         const T& operator*();
         bool operator==(const Iterator& rhs);
         bool operator!=(const Iterator& rhs);
@@ -83,7 +83,7 @@ public:
 
     ~RBT(); //dtor
     RBT();  //ctor
-    RBT(const RBT<T, Compare> &); //copy
+    RBT(const RBT<T, Compare> & rhs); //copy
     RBT(initializer_list<T> init_list); //braced-init-list
     template <typename InputIterator>
     RBT(InputIterator first, InputIterator last); //range
@@ -629,8 +629,7 @@ RBT<T, Compare>::RBT() : root_(nullptr), compare_(Compare())
 template <typename T, typename Compare>
 RBT<T, Compare>::RBT(const RBT<T, Compare> &rhs) : root_(nullptr)
 {
-    vector<T> preorder_vector = rhs.get_preorder();
-    for (auto node : preorder_vector)
+    for (T node : rhs)
         this->insert(node);
 }
 

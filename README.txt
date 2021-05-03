@@ -80,7 +80,34 @@ class RBT :
         - pushes the data in nodes to res in postorder
     - get_preorder_util(Node<T> *node, vector<T> *res) : void 
         - pushes the data in nodes to res in preorder
-    - 
+    - height_util(Node<T> *node_ptr) : int
+        - recursively calculates and returns height of the tree
+    - inorder_predecessor(Node<T> *node_ptr) : Node<T>* , static
+        - returns a pointer to the inorder predecessor of the node pointer
+    - Node<T>* inorder_successor(Node<T> *node_ptr) : Node<T>* , static
+        - returns a pointer to the inorder successor of the node pointer
+    - leaf_count_util(Node<T> *node_ptr) : int
+        - recursively calculates and returns number of leaves in the tree
+    - max_subtree(Node<T> *node_ptr) : Node<T> * , static
+        - returns a pointer to a node having the max data value in all apths from a node pointer
+    - min_subtree(Node<T> *node_ptr) : Node<T> * , static
+        - returns a pointer to a node having the min data value in all apths from a node pointer
+    - print_level_order_util(Node<T> *node_ptr) : void
+        - prints data of all nodes in tree in level-wise order
+    - rebalance_insert(Node<T> *node_ptr) : void
+        - does reblancing of the tree as node has been inserted in bst fashion
+    - rebalance_remove(Node<T> *node_ptr) : void
+        - rebalances the tree on deletion of a node, removes double blacks
+    - remove_util(Node<T> *node_ptr) : void
+        - utility function to delete a node
+    - rotate_left(Node<T> *node) : void
+        - performs left rotation of the tree on a given node
+    - rotate_right(Node<T> *node) : void
+        - performs right rotation of the tree on a given node
+    - size_util(Node<T> *node_ptr) : int
+        - returns the number of nodes in all paths from a given node
+    - succ_remove(Node<T> *node_ptr) : Node<T> *
+        - returns inorder successor in case of 2 children, else returns the child/null
 
 - Public fields :
     - class Iterator :
@@ -175,4 +202,3 @@ class RBT :
         - remove the node containing data
     - size() : int  
         - return the number of nodes in the tree
-     

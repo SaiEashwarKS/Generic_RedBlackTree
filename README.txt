@@ -15,10 +15,10 @@ Commands to run to execute the files :
 
     OR
 
-    compile the client.cpp and run the executable
+    compile client.cpp and run the executable
 
 - Windows and Mac:
-    compile the client.cpp and run the executable
+    compile client.cpp and run the executable
 
 ----------------------------
 

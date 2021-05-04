@@ -317,9 +317,9 @@ public:
         Iterator operator--(int);
 
         typedef T value_type;
-		typedef const Node<T>& reference; 
-		typedef const Node<T>* pointer; 
-		typedef bidirectional_iterator_tag iterator_category;
+	typedef const Node<T>& reference; 
+	typedef const Node<T>* pointer; 
+	typedef bidirectional_iterator_tag iterator_category;
     };
 
     ~RBT(); //dtor
@@ -541,11 +541,6 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
 {
     if (root_ == node_ptr)
     {
-        #if DEBUG
-                cout << "node is root\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << endl;
-        #endif
         node_ptr->colour_ = black;
     }
     else
@@ -565,13 +560,6 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
         }
         if (uncle_ptr && uncle_ptr->colour_ == red)
         {
-            #if DEBUG
-                cout << "parent is red, uncle is black\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                cout << endl;
-            #endif
             parent_ptr->colour_ = black;
             uncle_ptr->colour_ = black;
             grandparent_ptr->colour_ = red;
@@ -582,66 +570,26 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             if (parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->left_)
             // Left left case (parent left of grandparent, node left of parent)
             {
-                #if DEBUG
-                cout << "Performing right rotation (LL case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                cout << endl;
-                #endif
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
             }
             else if (parent_ptr == grandparent_ptr->left_ && node_ptr == node_ptr->parent_->right_)
             //left right case (parent left of grandparent, node right of parent)
             {
-                #if DEBUG
-                cout << "Performing right rotation (LR case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                #endif
                 rotate_left(parent_ptr);
-                #if DEBUG
-                cout << "Performing left rotation (LR case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                cout << endl;
-                #endif
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);
             }
             else if (parent_ptr == grandparent_ptr->right_ && node_ptr == node_ptr->parent_->right_)
             //right right case (parent right of grandparent, node right of parent)
             {
-                #if DEBUG
-                cout << "Performing left rotation (RR case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                cout << endl;
-                #endif
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
             }
             else
             //right left case (parent right of grandparent, node left of parent)
             {
-                #if DEBUG
-                cout << "Performing right rotation (RL case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                #endif
                 rotate_right(parent_ptr);
-                #if DEBUG
-                cout << "Performing left rotation (RL case)\n";
-                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
-                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
-                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
-                cout << endl;
-                #endif
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);
             }

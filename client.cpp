@@ -325,14 +325,23 @@ int main()
     #endif
 
     #if 1
-    RBT<int> t1 {1, 2, 3};
-    RBT<int> t3(t1);
-    for(auto e: t3)
+    RBT<int> t1 {3, 2, 1, 6, 5, 9, 7, 4, 8, 10};
+    for(auto e: t1)
     {
         cout << e << "\t";
     }
     cout << endl;
+
+    auto it = t1.rbegin();
+    while(it != t1.rend())
+    {
+        cout << *it << "\t";
+        ++it;
+    }
+    cout << endl;
     #endif
+
+
 
 	return 0;
 }

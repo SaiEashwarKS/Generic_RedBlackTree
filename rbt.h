@@ -62,9 +62,10 @@ public:
     {
         private:
         Node<T>* iterator_;
+        int is_reverse_iterator_;
 
         public:
-        Iterator(Node<T> *node_ptr);
+        Iterator(Node<T> *node_ptr, int is_reverse = 0);
         operator bool() const;
         const T& operator*();
         bool operator==(const Iterator& rhs);
@@ -108,6 +109,9 @@ public:
     void print_level_order();
     void remove(T data);
     int size();
+
+    Iterator rbegin() const;
+    Iterator rend() const;
 };
 
 //-----------Node methods
@@ -818,7 +822,7 @@ int RBT<T, Compare>::size()
 
 //-------------Iterator functions
 template<typename T, typename Compare>
-RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr) : iterator_(node_ptr)
+RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr, int is_reverse) : iterator_(node_ptr), is_reverse_iterator_(is_reverse)
 {};
 
 template<typename T, typename Compare>
@@ -836,7 +840,10 @@ const T& RBT<T, Compare>::Iterator::operator*()
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator++()
 {
-    iterator_ = inorder_successor(iterator_);
+    if(is_reverse_iterator_)
+        iterator_ = inorder_predecessor(iterator_);
+    else
+        iterator_ = inorder_successor(iterator_);
     return *this;
 }
 
@@ -851,7 +858,10 @@ typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator++(int)
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator--()
 {
-    iterator_ = inorder_predecessor(iterator_);
+    if(is_reverse_iterator_)
+        iterator_ = inorder_successor(iterator_);
+    else
+        iterator_ = inorder_predecessor(iterator_);
     return *this;
 }
 
@@ -875,4 +885,16 @@ bool RBT<T, Compare>::Iterator::operator!=(const typename RBT<T, Compare>::Itera
     return !(*this==rhs);
 }
 
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::rbegin() const
+{
+    return Iterator(max_subtree(root_), 1);;
+}
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::rend() const
+{
+    return Iterator(nullptr, 1);
+}
 #endif

@@ -19,7 +19,7 @@ A binary search tree is a red-black tree if it satisfies the following red-black
 - [Wikipedia](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
 
 ### Shareable Single Page website
-[Genereic Red Black Tree](https://saieashwarks.github.io/Generic_RedBlackTree/)
+[Generic Red Black Tree](https://saieashwarks.github.io/Generic_RedBlackTree/)
 
 ### Documentation and execution info
 ```txt

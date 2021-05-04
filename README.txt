@@ -115,11 +115,14 @@ class RBT :
     - Private fields :
         - iterator_ : Node<T>*
             : an iterator that points to a node in the tree
+        - is_reverse_iterator_ : int
+            : flag to determine if the iterator is forward or reverse
     - Public methods :
         - Constructors : (explicitly defined)
-            - Iterator(Node<T> *node_ptr)
+            - Iterator(Node<T> *node_ptr, int is_reverse = 0)
                 - single argument constructor
                 - initialises iterator_ to node_ptr
+                - initialises is_reverse_iterator_ to is_reverse (default 0)
         - operator bool() const :
             - overload bool typecasting
             - returns true if the iterator_ is not nullptr
@@ -198,7 +201,11 @@ class RBT :
         - returns reference to this tree
     - print_level_order() : void
         - prints the data in level order
+    - rbegin() : Iterator
+        - returns a reverse iterator to the max node of the tree
     - remove(T data) void
         - remove the node containing data
+    - rend() : Iterator
+        - returns a reverse iterator to nullptr
     - size() : int  
         - return the number of nodes in the tree

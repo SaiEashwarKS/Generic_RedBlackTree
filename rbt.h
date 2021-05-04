@@ -1,7 +1,7 @@
 #ifndef RBT_H
 #define RBT_H
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <vector>
 #include <queue>
@@ -64,9 +64,10 @@ public:
     {
         private:
         Node<T>* iterator_;
+        int is_reverse_iterator_;
 
         public:
-        Iterator(Node<T> *node_ptr);
+        Iterator(Node<T> *node_ptr, int is_reverse = 0);
         operator bool() const;
         const T& operator*();
         bool operator==(const Iterator& rhs);
@@ -108,7 +109,9 @@ public:
     template <typename T2, typename Compare2>
     friend RBT<T2, Compare2> &operator-(const RBT<T2, Compare2> &t1, const RBT<T2, Compare2> &t2);
     void print_level_order();
+    Iterator rbegin() const;
     void remove(T data);
+    Iterator rend() const;
     int size();
 };
 
@@ -294,11 +297,17 @@ void RBT<T, Compare>::print_level_order_util(Node<T> *node_ptr)
     cout << "\n";
 }
 
+
 template<typename T, typename Compare>
 void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
 {
     if (root_ == node_ptr)
     {
+        #if DEBUG
+                cout << "node is root\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << endl;
+        #endif
         node_ptr->colour_ = black;
     }
     else
@@ -318,6 +327,13 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
         }
         if (uncle_ptr && uncle_ptr->colour_ == red)
         {
+            #if DEBUG
+                cout << "parent is red, uncle is black\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
+                cout << endl;
+            #endif
             parent_ptr->colour_ = black;
             uncle_ptr->colour_ = black;
             grandparent_ptr->colour_ = red;
@@ -329,7 +345,11 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             // Left left case (parent left of grandparent, node left of parent)
             {
                 #if DEBUG
-                cout << "Performing right rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                cout << "Performing right rotation (LL case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
+                cout << endl;
                 #endif
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
@@ -338,10 +358,19 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             //left right case (parent left of grandparent, node right of parent)
             {
                 #if DEBUG
-                cout << "Performing left rotation on " << parent_ptr->data_ << " colour:"<<parent_ptr->colour_<<endl;
-                cout << "Performing right rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                cout << "Performing right rotation (LR case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
                 #endif
                 rotate_left(parent_ptr);
+                #if DEBUG
+                cout << "Performing left rotation (LR case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
+                cout << endl;
+                #endif
                 rotate_right(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);
             }
@@ -349,7 +378,11 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             //right right case (parent right of grandparent, node right of parent)
             {
                 #if DEBUG
-                cout << "Performing left rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                cout << "Performing left rotation (RR case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
+                cout << endl;
                 #endif
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, parent_ptr->colour_);
@@ -358,10 +391,19 @@ void RBT<T, Compare>::rebalance_insert(Node<T> *node_ptr)
             //right left case (parent right of grandparent, node left of parent)
             {
                 #if DEBUG
-                cout << "Performing right rotation on " << parent_ptr->data_ << " colour:"<<parent_ptr->colour_<<endl;
-                cout << "Performing left rotation on " << grandparent_ptr->data_ << " colour:"<<grandparent_ptr->colour_<<endl;
+                cout << "Performing right rotation (RL case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
                 #endif
                 rotate_right(parent_ptr);
+                #if DEBUG
+                cout << "Performing left rotation (RL case)\n";
+                cout << "node : " << node_ptr->data_ << " colour : "<< node_ptr->colour_ << endl;
+                cout << "parent : " << parent_ptr->data_ << " colour : " << parent_ptr->colour_ << endl;
+                cout << "grandparent : " << grandparent_ptr->data_ << " colour : " <<  grandparent_ptr->colour_ << endl;
+                cout << endl;
+                #endif
                 rotate_left(grandparent_ptr);
                 swap(grandparent_ptr->colour_, node_ptr->colour_);
             }
@@ -751,6 +793,9 @@ void RBT<T, Compare>::insert(T data)
     if (node_iter)
         return;
     Node<T> *node_ptr = bst_insert(data);
+    #if DEBUG
+    cout << "node to be inserted : " << node_ptr->data_ << " colour:"<<node_ptr->colour_<<endl;
+    #endif
     //cout << "bst insert done, node_ptr : " << node_ptr << "\n";
     rebalance_insert(node_ptr);
 }
@@ -809,6 +854,12 @@ void RBT<T, Compare>::print_level_order()
 }
 
 template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::rbegin() const
+{
+    return Iterator(max_subtree(root_), 1);;
+}
+
+template<typename T, typename Compare>
 void RBT<T, Compare>::remove(T data)
 {
     if (root_ == nullptr)
@@ -826,6 +877,13 @@ void RBT<T, Compare>::remove(T data)
     remove_util(node_ptr);
 }
 
+
+template<typename T, typename Compare>
+typename RBT<T, Compare>::Iterator RBT<T, Compare>::rend() const
+{
+    return Iterator(nullptr, 1);
+}
+
 template<typename T, typename Compare>
 int RBT<T, Compare>::size()
 {
@@ -834,7 +892,7 @@ int RBT<T, Compare>::size()
 
 //-------------Iterator functions
 template<typename T, typename Compare>
-RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr) : iterator_(node_ptr)
+RBT<T, Compare>::Iterator::Iterator(Node<T> *node_ptr, int is_reverse) : iterator_(node_ptr), is_reverse_iterator_(is_reverse)
 {};
 
 template<typename T, typename Compare>
@@ -852,7 +910,10 @@ const T& RBT<T, Compare>::Iterator::operator*()
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator++()
 {
-    iterator_ = inorder_successor(iterator_);
+    if(is_reverse_iterator_)
+        iterator_ = inorder_predecessor(iterator_);
+    else
+        iterator_ = inorder_successor(iterator_);
     return *this;
 }
 
@@ -867,7 +928,10 @@ typename RBT<T, Compare>::Iterator RBT<T, Compare>::Iterator::operator++(int)
 template<typename T, typename Compare>
 typename RBT<T, Compare>::Iterator& RBT<T, Compare>::Iterator::operator--()
 {
-    iterator_ = inorder_predecessor(iterator_);
+    if(is_reverse_iterator_)
+        iterator_ = inorder_successor(iterator_);
+    else
+        iterator_ = inorder_predecessor(iterator_);
     return *this;
 }
 

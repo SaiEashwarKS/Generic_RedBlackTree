@@ -41,6 +41,7 @@ private:
     Node<T> *bst_insert(T data);
     void bst_insert_util(Node<T> *temp, Node<T> *node);
     Node<T> *create_node(T data);
+    void delete_node(Node<T> *node);
     void get_inorder_util(Node<T> *node, vector<T> *res) const;
     void get_postorder_util(Node<T> *node, vector<T> *res) const;
     void get_preorder_util(Node<T> *node, vector<T> *res) const;
@@ -92,7 +93,6 @@ public:
     RBT(InputIterator first, InputIterator last); //range
 
     Iterator begin() const;
-    void delete_node(Node<T> *node);
     Iterator end() const;
     Iterator find(T data) const;
     vector<T> get_inorder() const;
@@ -474,7 +474,7 @@ void RBT<T, Compare>::rebalance_remove(Node<T> *node_ptr)
                     if(sibling_ptr == parent_ptr->left_)
                     {
                         sibling_ptr->right_->colour_ = sibling_ptr->colour_;
-                        rotate_right(sibling_ptr);
+                        rotate_left(sibling_ptr);
                         rotate_right(parent_ptr);
                     }
                     else

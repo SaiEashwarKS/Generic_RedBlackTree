@@ -97,6 +97,8 @@ class RBT :
         - performs BST insertion on the node to the tree rooted by root
     - create_node : Node<T>*
         - calls the constructor of Node class to create a new node and returns a pointer to the new node
+    - delete_node(Node<T>* node) : void
+        - deletes nodes rooted by node
     - get_inorder_util(Node<T> *node, vector<T> *res) : void 
         - pushes the data in nodes to res in inorder
     - get_postorder_util(Node<T> *node, vector<T> *res) : void 
@@ -191,18 +193,16 @@ class RBT :
 
     - begin() const : Iterator
         - return iterator to the minimum node of the tree
-    - delete_node(Node<T>* node) : void
-        - deletes nodes rooted by node
     - end() const : Iterator
         - return nullptr
     - find(T data) : Iterator
         - if data is present, return iterator to the node containing the data, else return nullptr
     - get_inorder() const : vector<T>
-        - returns a vector of data contained, in inorder
+        - returns a vector of data contained in inorder
     - get_postorder() const : vector<T>
-        - returns a vector of data contained, in postorder
+        - returns a vector of data contained in postorder
     - get_preorder() const : vector<T>
-        - returns a vector of data contained, in preorder
+        - returns a vector of data contained in preorder
     - height() : int
         - return height of the tree
     - insert(T data) : void
@@ -213,7 +213,7 @@ class RBT :
         - returns Iterator to the max node in the tree
     - min() : Iterator
         - returns Iterator to the min node in the tree
-    - operator+(const RBT<T, Compare>& rhs) : RBT<T, Compare>&
+    - operator=(const RBT<T, Compare>& rhs) : RBT<T, Compare>&
         - copies the nodes from one tree to another
         - return the reference to the tree thats calling the function
     - operator+(const RBT<T, Compare> &t1, const RBT<T, Compare> &t2) : RBT<T, Compare>

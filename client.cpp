@@ -324,16 +324,18 @@ int main()
     cout << endl;
     #endif
 
-    #if 1
-    RBT<int> t1 {3, 2, 1, 6, 5, 9, 7, 4, 8, 10};
-    for(auto e: t1)
+    #if 0
+    RBT<int> t {3, 2, 1, 6, 5, 9, 7, 4, 8, 10};
+    cout << "forward : \n";
+    for(auto e: t)
     {
         cout << e << "\t";
     }
     cout << endl;
 
-    auto it = t1.rbegin();
-    while(it != t1.rend())
+    auto it = t.rbegin();
+    cout << "reverse : \n";
+    while(it != t.rend())
     {
         cout << *it << "\t";
         ++it;
@@ -341,6 +343,59 @@ int main()
     cout << endl;
     #endif
 
+    #if 1
+    cout << "\nnode root\n";
+    RBT<int> tree1 {6};
+    //RBT<int> t3(t1);
+    for(auto e: tree1)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n------------------------" <<endl;
+    #endif
+
+    //RR
+    #if 1
+    cout << "\nRR\n";
+    RBT<int> t1 {6, 7, 8};
+    //RBT<int> t3(t1);
+    for(auto e: t1)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n------------------------" <<endl;
+    #endif
+
+    //LL
+    #if 1
+    cout << "\nLL\n";
+    RBT<int> t2{8, 7, 6};
+    for(auto e: t1)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n------------------------" <<endl;
+    #endif
+
+    #if 1
+    cout << "\nLR\n";
+    RBT<int> t3{8, 7, 6, 1, 2, 3};
+    for(auto e: t1)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n------------------------" <<endl;
+    #endif  
+
+    #if 1
+    cout << "\nRL\n";
+    RBT<int> t4{1, 2,3, 8, 7};
+    for(auto e: t1)
+    {
+        cout << e << "\t";
+    }
+    cout << "\n------------------------" <<endl;
+    #endif
 
 
 	return 0;

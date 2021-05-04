@@ -1,4 +1,4 @@
-# Generic Red Black Trees
+# Generic Red Black Tree
 ### A generic implementation of Red Black Trees in C++
 ## By _Sai Eashwar K S, Monisha Chandra_
 

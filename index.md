@@ -1196,11 +1196,11 @@ bool RBT<T, Compare>::Iterator::operator!=(const typename RBT<T, Compare>::Itera
 #endif
 ```
 
-## Contact me
+## About me
 
 
 | Handle | Link |
 | ------ | ------ |
 | GitHub | [https://github.com/SaiEashwarKS](https://github.com/SaiEashwarKS) |
-| Linked | [https://www.linkedin.com/in/sai-eashwar-k-s](https://www.linkedin.com/in/sai-eashwar-k-s)|
+| LinkedIn | [https://www.linkedin.com/in/sai-eashwar-k-s](https://www.linkedin.com/in/sai-eashwar-k-s)|
 | Email | [saieashwar.ks@gmail.com](saieashwar.ks@gmail.com) |

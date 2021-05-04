@@ -19,7 +19,7 @@ A binary search tree is a red-black tree if it satisfies the following red-black
 - [Wikipedia](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
 
 ### Documentation and execution info
-[skip to code](#RBT.h)
+[skip to code](#code)
 ```txt
 Files : 
 - rbt.h :
@@ -233,8 +233,8 @@ class RBT :
     - size() : int  
         - return the number of nodes in the tree
 ```
-
-### (#RBT.h)
+<a name="code"></a>
+### RBT.h 
 ```cpp
 #ifndef RBT_H
 #define RBT_H

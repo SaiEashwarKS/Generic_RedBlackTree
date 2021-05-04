@@ -12,7 +12,14 @@ A binary search tree is a red-black tree if it satisfies the following red-black
 3. If a node is red, then both its children are black.
 4. Every simple path from a node to a descendant leaf contains the same number of black nodes.
 
+### Useful resources
+- [Introduction](https://www.geeksforgeeks.org/red-black-tree-set-1-introduction-2/)
+- [Insertion](https://www.geeksforgeeks.org/red-black-tree-set-2-insert/)
+- [Deletion](https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/)
+- [Wikipedia](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+
 ### Documentation and execution info
+[skip to code](#RBT.h)
 ```txt
 Files : 
 - rbt.h :
@@ -227,7 +234,7 @@ class RBT :
         - return the number of nodes in the tree
 ```
 
-### RBT.h
+### (#RBT.h)
 ```cpp
 #ifndef RBT_H
 #define RBT_H
@@ -1194,6 +1201,6 @@ bool RBT<T, Compare>::Iterator::operator!=(const typename RBT<T, Compare>::Itera
 
 | Handle | Link |
 | ------ | ------ |
-| GitHub | https://github.com/SaiEashwarKS |
-| Linked | https://www.linkedin.com/in/sai-eashwar-k-s|
-| Email | saieashwar.ks@gmail.com |
+| GitHub | [https://github.com/SaiEashwarKS](https://github.com/SaiEashwarKS) |
+| Linked | [https://www.linkedin.com/in/sai-eashwar-k-s](https://www.linkedin.com/in/sai-eashwar-k-s)|
+| Email | [saieashwar.ks@gmail.com](saieashwar.ks@gmail.com) |
